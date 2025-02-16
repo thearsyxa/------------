@@ -1,12 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
+from django.contrib import messages
 from MusicHub_App.models import Artist, Album, Track
 from .utils import get_artist_info, get_wikipedia_summary, summarize_text, get_yandex_music_data
 
 def index(request):
     template = loader.get_template('MusicHub_App/index.html')
     artists = Artist.objects.order_by("-published")
+    messages.add_message(request, messages.SUCCESS, "Confirm!")
+    
     context = {"artists": artists}
     return HttpResponse(template.render(context, request))
 
@@ -15,7 +18,8 @@ def create_artist_profile(request):
     access_token = 'your_access_token'
 
     artist_info = get_artist_info(spotify_artist_id, access_token)
-    artist_name = artist_info['name']
+    artist_name = artist_info.get('name', 'Unknown Artist')
+        
     wikipedia_summary = get_wikipedia_summary(artist_name)
     
     if wikipedia_summary:
