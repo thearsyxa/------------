@@ -1,0 +1,21 @@
+{% load static %}
+{% load bootstrap5 %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% bootstrap_css %}
+    {% bootstrap_messages %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <title>{% block title %}МьюзикХаб{% endblock %}</title>
+</head>
+<body>
+    {% include "menu.html" with is_auth=1 %}
+    
+    {% block content %}
+    Hello
+    {% endblock %}
+</body>
+</html>

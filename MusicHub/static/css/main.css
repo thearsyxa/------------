@@ -1,0 +1,125 @@
+:root {
+    --primary-bg: #121212; 
+    --secondary-bg: #1e1e1e; 
+    --accent-color: #1db954; 
+    --text-color: #ffffff; 
+    --muted-text: #b3b3b3; 
+    --hover-bg: #282828; 
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: var(--secondary-bg);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    padding: 8px 15px;
+    background-color: var(--hover-bg);
+    border-radius: 4px;
+}
+
+header nav ul li a:hover {
+    background-color: var(--accent-color);
+    color: var(--primary-bg);
+}
+
+main {
+    padding: 20px 30px;
+}
+
+h2 {
+    font-size: 1.6rem;
+    color: var(--accent-color);
+    margin-bottom: 15px;
+}
+
+.card {
+    background-color: var(--secondary-bg);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35);
+}
+
+button {
+    background-color: var(--accent-color);
+    border: none;
+    color: var(--primary-bg);
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #1aa34a;
+}
+
+footer {
+    padding: 15px 30px;
+    text-align: center;
+    background-color: var(--secondary-bg);
+    font-size: 0.9rem;
+    color: var(--muted-text);
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    header nav ul {
+        flex-direction: column;
+    }
+
+    header nav ul li {
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+}

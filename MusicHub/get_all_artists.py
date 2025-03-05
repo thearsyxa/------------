@@ -1,5 +1,6 @@
 import requests
 
+
 def get_all_artists(access_token):
     url = "https://api.spotify.com/v1/artists"
     headers = {

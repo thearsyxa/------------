@@ -1,11 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Профиль исполнителя</title>
+    <title>{{ artist.name }}</title>
 </head>
 <body>
     <h1>{{ artist.name }}</h1>
     <p>{{ artist.description }}</p>
-    <p>Количество прослушиваний: {{ artist.listeners }}</p>
+
+    <h2>Альбомы</h2>
+    <ul>
+        {% for album in albums %}
+            <li>
+                <h3>{{ album.title }}</h3>
+                <p>Дата выхода: {{ album.release_date }}</p>
+                <h4>Треки:</h4>
+                <ul>
+                    {% for track in album.track_set.all %}
+                        <li>
+                            <p>{{ track.title }} - Продолжительность: {{ track.duration }}</p>
+                            {% if track.audio_url %}
+                                <audio controls>
+                                    <source src="{{ track.audio_url }}" type="audio/mpeg">
+                                    Ваш браузер не поддерживает воспроизведение аудио.
+                                </audio>
+                            {% else %}
+                                <p>Аудиофайл не доступен.</p>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

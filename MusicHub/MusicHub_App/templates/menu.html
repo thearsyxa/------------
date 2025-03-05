@@ -3,8 +3,18 @@
         <a href="{% url 'home' %}" style="color: white; text-decoration: none;">Главная страница</a>
     </div>
     {% if is_auth %}
-        <div class="menu-item btn btn-primary">Профиль</div>
+        <div class="menu-item btn btn-primary">
+            <a href="{% url 'profile' %}" style="color: white; text-decoration: none;">Профиль</a>
+        </div>
+        <div class="menu-item btn btn-primary">
+            <a href="{% url 'logout' %}" style="color: white; text-decoration: none;">Выйти</a>
+        </div>
     {% else %}
-        <div class="menu-item btn btn-primary">Выйти</div>
+        <div class="menu-item btn btn-primary">
+            <a href="{% url 'login' %}" style="color: white; text-decoration: none;">Войти</a>
+        </div>
+        <div class="menu-item btn btn-primary">
+            <a href="{% url 'register' %}" style="color: white; text-decoration: none;">Регистрация</a>
+        </div>
     {% endif %}
 </div>

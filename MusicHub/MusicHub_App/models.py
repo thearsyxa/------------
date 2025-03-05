@@ -35,6 +35,10 @@ class Track(models.Model):
     title = models.CharField(max_length = 100)
     duration = models.DurationField()
     play_count = models.IntegerField(null = True, blank=True)
+    spotify_id = models.CharField(max_length=50, null=True, blank=True)
+    is_updated = models.BooleanField(default=False)
+    audio_url = models.URLField(max_length=1024, null=True, blank=True)
+    
     
     def __str__(self):
         return self.title

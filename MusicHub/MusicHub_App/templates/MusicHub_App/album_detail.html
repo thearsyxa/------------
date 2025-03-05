@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ album.title }}</title>
+</head>
+<body>
+    <h1>{{ album.title }}</h1>
+    <p>Дата выхода: {{ album.release_date }}</p>
+
+    <h2>Треки</h2>
+    <ul>
+        {% for track in album.track_set.all %}
+            <li>
+                <p>{{ track.title }} - Продолжительность: {{ track.duration }}</p>
+                <iframe src="https://open.spotify.com/embed/track/{{ track.spotify_id }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -3,12 +3,13 @@ from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand
 from MusicHub_App.models import Artist, Album, Track
 from MusicHub_App.utils import search_artists, get_artist_info, get_albums_info, get_tracks_info, get_wikipedia_summary, summarize_text, get_yandex_music_data
+from MusicHub_App.spotify import get_spotify_token
 
 class Command(BaseCommand):
     help = 'Импорт данных из Spotify и Википедии'
 
     def handle(self, *args, **kwargs):
-        access_token = 'BQD8aXlX0hfpV-Ljl1_r7guIUDelV0D9305rm5i-ky6CGZFH7jPPCwKbU2lwhbUcWniYad57S9lgIdyUrB6yO5PbTKEN90DdxydYz9xe0207n1KhD6dd8Jps1lxZ-wv87fkVQ0Vju-U'  
+        access_token = get_spotify_token()
         specific_artists = ["Джизус", "Три дня дождя", "Nirvana", "System of a Down", "Юлия Савичева", "Metallica", "Ваня Дмитриенко", "Michael Bublé", "PHARAOH", "Нервы"]
 
         for artist_name in specific_artists:
@@ -16,6 +17,10 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f"Поиск исполнителя: {artist_name}"))
                 
                 artists = search_artists(artist_name, access_token)
+                if not artists:
+                    self.stdout.write(self.style.ERROR(f"Не удалось найти исполнителя: {artist_name}"))
+                    continue
+
                 for artist_data in artists:
                     try:
                         spotify_artist_id = artist_data['id']
@@ -77,9 +82,10 @@ class Command(BaseCommand):
                                     album=album,
                                     title=track_info['name'],
                                     duration=timedelta(milliseconds=track_info['duration_ms']), 
-                                    defaults={'play_count': track_info.get('play_count')}
+                                    defaults={'play_count': track_info.get('play_count'), 'spotify_id': track_info.get('id')}
                                 )
                     except Exception as e:
                         self.stdout.write(self.style.ERROR(f"Ошибка при импорте данных для артиста: {e}"))
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Ошибка при выполнении поиска: {e}"))
+

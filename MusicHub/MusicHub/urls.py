@@ -19,6 +19,8 @@ from django.urls import path, include
 
 
 urlpatterns = [
+    path('account/', include('django.contrib.auth.urls')),
+    path('common/', include('common.urls')),
     path('admin/', admin.site.urls),
     path('musichub/', include('MusicHub_App.urls')),
     path('', include('MusicHub_App.urls')),

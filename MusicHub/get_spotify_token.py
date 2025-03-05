@@ -1,6 +1,7 @@
 import base64
 import requests
 
+
 client_id = 'cddafd384a6b410186c5590513258e54'
 client_secret = '67c0e5b8758d4971aded0856298ed853'
 auth_str = f"{client_id}:{client_secret}"

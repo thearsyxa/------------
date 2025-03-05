@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap5',
     
-    'MusicHub_App'
+    'MusicHub_App',
+    'common',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'MusicHub.middleware.CustomMiddleware',
 ]
 
 ROOT_URLCONF = 'MusicHub.urls'
@@ -65,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'MusicHub.context.test_context',
             ],
         },
     },
@@ -118,10 +121,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-# STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"  
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SPOTIFY_CLIENT_ID = 'cddafd384a6b410186c5590513258e54'
+SPOTIFY_CLIENT_SECRET = '67c0e5b8758d4971aded0856298ed853'

@@ -12,10 +12,21 @@
     <title>{% block title %}МьюзикХаб{% endblock %}</title>
 </head>
 <body>
-    {% include "menu.html" with is_auth=1 %}
-    
-    {% block content %}
-    Hello
-    {% endblock %}
+    <nav>
+        <ul>
+            {% include "menu.html" with is_auth=1 %}
+        </ul>
+    </nav>
+
+    <main>
+        {% block content %}
+        Hello
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>© 2025 MusicHub</p>
+    </footer>
 </body>
 </html>
+
