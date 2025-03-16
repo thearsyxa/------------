@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <title>{{ album.title }}</title>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="{% static 'img/logo.jfif' %}" alt="Logo" class="logo">
+        </div>
+        <nav>
+            <ul>
+                {% include "menu.html" with is_auth=1 %}
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <h1>{{ album.title }}</h1>
+        <p>Release date: {{ album.release_date }}</p>
+        <p>Genre: {{ album.genre }}</p>
+
+        <h2>Треки</h2>
+        <ul>
+            {% for track in tracks %}
+                <li>
+                    {{ track.title }} - {{ track.duration }} - {{ track.play_count }}
+                    <audio controls>
+                        <source src="{{ track.audio_file.url }}" type="audio/mpeg">
+                        Ваш браузер не поддерживает элемент audio.
+                    </audio>
+                    <a href="{% url 'track_detail' track.id %}">Подробнее</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </main>
+
+    <footer>
+        <p>© 2025 MusicHub. Все права защищены.</p>
+    </footer>
+</body>
+</html>

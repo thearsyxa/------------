@@ -1,21 +1,38 @@
 {% load static %}
 {% load bootstrap5 %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     {% bootstrap_css %}
-    {% bootstrap_messages %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <title>{% block title %}МьюзикХаб{% endblock %}</title>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <title>{% block title %}MusicHub{% endblock %}</title>
 </head>
 <body>
-    {% include "menu.html" with is_auth=1 %}
+    <header>
+        <div class="logo-container">
+            <img src="{% static 'img/logo.jfif' %}" alt="Logo" class="logo">
+        </div>
+        <nav>
+            <ul>
+                {% include "menu.html" with is_auth=1 %}
+            </ul>
+            <form method="get" action="{% url 'search_artists' %}" class="search-form">
+                <input type="text" name="query" placeholder="Поиск...." class="search-input">
+                <button type="submit" class="search-button">Поиск</button>
+            </form>
+        </nav>
+    </header>
     
-    {% block content %}
-    Hello
-    {% endblock %}
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>© 2025 MusicHub. Все права защищены.</p>
+    </footer>
 </body>
 </html>

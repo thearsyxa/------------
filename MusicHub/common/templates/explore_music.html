@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h2>Исследуй мир музыки</h2>
+    <p>Воспользуйтесь поиском, чтобы найти новые треки и исполнителей!</p>
+    <form action="/search/" method="get">
+        <input type="text" name="query" placeholder="Введите имя исполнителя или трека">
+        <button type="submit">Искать</button>
+    </form>
+{% endblock %}

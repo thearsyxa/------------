@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h2>Популярные исполнители</h2>
+    <ul>
+        {% for artist in artists %}
+            <li>
+                <img src="{{ artist.image.url }}" alt="{{ artist.name }}" style="width: 50px;">
+                {{ artist.name }} - {{ artist.genre }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

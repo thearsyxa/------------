@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+    <h1>{{ track.title }}</h1>
+    <p><strong>Исполнитель:</strong> <a href="{% url 'artist_detail' artist.id %}">{{ artist.name }}</a></p>
+    <p><strong>Альбом:</strong> <a href="{% url 'album_detail' album.id %}">{{ album.title }}</a></p>
+    <p><strong>Продолжительность:</strong> {{ track.duration }}</p>
+    <p><strong>Дата выпуска:</strong> {{ track.release_date }}</p>
+    <p><strong>Жанр:</strong> {{ track.genre }}</p>
+    <p><strong>Описание:</strong> {{ track.description }}</p>
+
+    <h2>Проигрыватель</h2>
+    <audio id="audioPlayer" controls>
+        <source src="{{ track.audio_file.url }}" type="audio/mpeg">
+        Ваш браузер не поддерживает элемент audio.
+    </audio>
+
+    <button onclick="playPause()">Воспроизведение / Пауза</button>
+    <button onclick="stop()">Стоп</button>
+    <button onclick="setVolume(0.5)">Установить громкость 50%</button>
+
+    <script>
+        const audioPlayer = document.getElementById('audioPlayer');
+
+        function playPause() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+            } else {
+                audioPlayer.pause();
+            }
+        }
+
+        function stop() {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+        }
+
+        function setVolume(volume) {
+            audioPlayer.volume = volume;
+        }
+    </script>
+{% endblock %}

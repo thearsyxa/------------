@@ -1,11 +1,8 @@
 {% load static %}
-{% load bootstrap5 %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     {% bootstrap_css %}
-    {% bootstrap_messages %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -14,13 +11,12 @@
 <body>
     <nav>
         <ul>
-            {% include "menu.html" with is_auth=1 %}
+            {% include "common/templates/menu.html" with is_auth=1 %}
         </ul>
     </nav>
 
     <main>
         {% block content %}
-        Hello
         {% endblock %}
     </main>
 
@@ -29,4 +25,3 @@
     </footer>
 </body>
 </html>
-
