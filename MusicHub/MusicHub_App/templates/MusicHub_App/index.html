@@ -1,16 +1,22 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <!-- Приветственный баннер -->
     <div class="banner">
         <h1>Добро пожаловать в MusicHub</h1>
         <p>Исследуйте любимых исполнителей, делитесь вкусами и наслаждайтесь музыкой!</p>
-        <a href="{% url 'register' %}" class="button primary">Присоединиться</a>
-        <a href="{% url 'login' %}" class="button secondary">Войти</a>
+        {% if not request.user.is_authenticated %}
+            <a href="{% url 'register' %}" class="button primary">Присоединиться</a>
+            <a href="{% url 'login' %}" class="button primary">Войти</a>
+        {% endif %}
+    <div class="playlist-button">
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'playlist_detail' %}" class="button primary">Любимые треки</a>
+        {% endif %}
     </div>
 
+    </div>
     <div class="popular-artists">
-        <h2>Популярные исполнители</h2>
+        <h2 class="section-title">Популярные исполнители</h2>
         <div class="artist-list">
             {% for artist in popular_artists %}
                 <div class="artist-card">
@@ -20,27 +26,21 @@
                 </div>
             {% endfor %}
         </div>
-    
         <div class="more-artists">
             <a href="{% url 'popular_artists' %}" class="button primary">Посмотреть всех популярных исполнителей</a>
         </div>
     </div>
-
-    
     <div class="recommendations">
-        {% if is_auth %}
-            <h2>Ваши рекомендации</h2>
+        {% if request.user.is_authenticated %}
+        <h2 class="section-title">Ваши рекомендации</h2>
             <ul>
                 {% for track in recommended_tracks %}
                     <li>{{ track.name }} - {{ track.artist }}</li>
                 {% endfor %}
             </ul>
-            <p>Используйте поисковую строку выше, чтобы найти ваших любимых исполнителей или перейдите в <a href="/profile/">ваш профиль</a>.</p>
         {% else %}
             <h2>Исследуй мир музыки</h2>
             <p>Войдите или зарегистрируйтесь, чтобы получить персонализированные рекомендации.</p>
-            <a href="{% url 'explore_music' %}" class="button secondary">Исследуй мир музыки</a>
         {% endif %}
     </div>
 {% endblock %}
-    

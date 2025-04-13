@@ -1,17 +1,17 @@
 <div class="menu">
     <div class="menu-item">
-        <a href="{% url 'home' %}" class="button">Главная страница</a>
+        <a href="{% url 'home' %}" class="button primary">Главная страница</a>
     </div>
     {% if is_auth %}
         <div class="menu-item">
-            <a href="/profile/" class="button">Профиль</a>
+            <a href="/profile/" class="button primary">Профиль</a>
         </div>
         <div class="menu-item">
-            <a href="{% url 'logout' %}" class="button">Выйти</a>
+            <a href="{% url 'logout' %}" class="button primary">Выйти</a>
         </div>
     {% else %}
         <div class="menu-item">
-            <a href="{% url 'login' %}" class="button">Войти</a>
+            <a href="{% url 'login' %}" class="button primary">Войти</a>
         </div>
     {% endif %}
 </div>

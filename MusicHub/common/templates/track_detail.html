@@ -2,26 +2,76 @@
 {% load static %}
 
 {% block content %}
-    <h1>{{ track.title }}</h1>
-    <p><strong>Исполнитель:</strong> <a href="{% url 'artist_detail' artist.id %}">{{ artist.name }}</a></p>
-    <p><strong>Альбом:</strong> <a href="{% url 'album_detail' album.id %}">{{ album.title }}</a></p>
-    <p><strong>Продолжительность:</strong> {{ track.duration }}</p>
-    <p><strong>Дата выпуска:</strong> {{ track.release_date }}</p>
-    <p><strong>Жанр:</strong> {{ track.genre }}</p>
-    <p><strong>Описание:</strong> {{ track.description }}</p>
 
-    <h2>Проигрыватель</h2>
-    <audio id="audioPlayer" controls>
-        <source src="{{ track.audio_file.url }}" type="audio/mpeg">
-        Ваш браузер не поддерживает элемент audio.
-    </audio>
+<div class="track-container">
+    {% if not track.album %}
+        <div class="avatar">
+            {% if track.avatar %}
+                <img src="{{ track.avatar.url }}" alt="Аватарка трека {{ track.title }}" class="avatar-image">
+            {% else %}
+                <img src="{% static 'images/default_avatar.png' %}" alt="Аватарка отсутствует" class="avatar-image">
+            {% endif %}
+        </div>
+    {% endif %}
+    <div class="details">
+        <h1>{{ track.title }}</h1>
+        <p><strong>Исполнитель:</strong> <a href="{% url 'artist_detail' artist.id %}">{{ artist.name }}</a></p>
+        {% if track.album %}
+            <p><strong>Альбом:</strong> <a href="{% url 'album_detail' album.id %}">{{ album.title }}</a></p>
+        {% endif %}
+        <p><strong>Продолжительность:</strong> {{ track.duration }}</p>
+        <p><strong>Дата выпуска:</strong> {{ track.release_date }}</p>
+        <p><strong>Жанр:</strong> {{ track.genre }}</p>
+        <p><strong>Описание:</strong> {{ track.description }}</p>
+        <a href="{% url 'add_to_playlist' track.id %}" class="button primary">Добавить в плейлист</a>
+    </div>
+</div>
 
-    <button onclick="playPause()">Воспроизведение / Пауза</button>
-    <button onclick="stop()">Стоп</button>
+<h2>Проигрыватель</h2>
+<audio id="audioPlayer">
+    <source src="{{ track.audio_file.url }}" type="audio/mpeg">
+    Ваш браузер не поддерживает элемент audio.
+</audio>
+
+<div class="player-controls">
+    <button onclick="playPause()">⏯ Пауза</button>
+    <button onclick="stop()">⏹ Стоп</button>
+    <input id="seekBar" type="range" min="0" max="100" value="0" step="1">
+    <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
     <button onclick="setVolume(0.5)">Установить громкость 50%</button>
+</div>
+
+<h2>Текст песни</h2>
+<button class="lyrics-btn" data-track-id="{{ track.id }}">Показать текст песни</button>
+<div class="lyrics-container" style="display: none;">
+    <p class="lyrics-text"></p>
+</div>
 
     <script>
         const audioPlayer = document.getElementById('audioPlayer');
+        const seekBar = document.getElementById('seekBar');
+        const currentTimeSpan = document.getElementById('currentTime');
+        const durationSpan = document.getElementById('duration');
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            const currentTime = audioPlayer.currentTime;
+            const duration = audioPlayer.duration;
+
+            if (!isNaN(duration)) {
+                seekBar.value = (currentTime / duration) * 100;
+                currentTimeSpan.innerText = formatTime(currentTime);
+                durationSpan.innerText = formatTime(duration);
+            }
+        });
+
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            durationSpan.innerText = formatTime(audioPlayer.duration);
+        });
+
+        seekBar.addEventListener('input', () => {
+            const duration = audioPlayer.duration;
+            audioPlayer.currentTime = (seekBar.value / 100) * duration;
+        });
 
         function playPause() {
             if (audioPlayer.paused) {
@@ -39,5 +89,40 @@
         function setVolume(volume) {
             audioPlayer.volume = volume;
         }
+
+        function formatTime(time) {
+            const minutes = Math.floor(time / 60);
+            const seconds = Math.floor(time % 60).toString().padStart(2, '0');
+            return `${minutes}:${seconds}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const lyricsButton = document.querySelector('.lyrics-btn');
+            const lyricsContainer = document.querySelector('.lyrics-container');
+
+            lyricsButton.addEventListener('click', function () {
+                const trackId = lyricsButton.getAttribute('data-track-id');
+
+                if (lyricsContainer.style.display === 'block') {
+                    lyricsContainer.style.display = 'none';
+                    return;
+                }
+
+                fetch(`/get-lyrics/${trackId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.lyrics) {
+                            lyricsContainer.querySelector('.lyrics-text').innerText = data.lyrics;
+                            lyricsContainer.style.display = 'block';
+                        } else if (data.error) {
+                            alert(data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка:', error);
+                        alert('Не удалось загрузить текст песни.');
+                    });
+            });
+        });
     </script>
 {% endblock %}

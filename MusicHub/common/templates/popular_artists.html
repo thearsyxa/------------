@@ -1,13 +1,27 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block content %}
     <h2>Популярные исполнители</h2>
-    <ul>
+    <div class="artists-container">
         {% for artist in artists %}
-            <li>
-                <img src="{{ artist.image.url }}" alt="{{ artist.name }}" style="width: 50px;">
-                {{ artist.name }} - {{ artist.genre }}
-            </li>
+            <div class="artist-card">
+                <img src="{% if artist.avatar %}{{ artist.avatar.url }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="{{ artist.name }}" class="artist-avatar">
+                <div class="artist-info">
+                    <h3>{{ artist.name }}</h3>
+                    <p><strong>Жанр:</strong> {{ artist.genre }}</p>
+                </div>
+                {% if artist.tracks.exists %}
+                    <h4>Треки:</h4>
+                    <ul class="track-list">
+                        {% for track in artist.tracks.all %}
+                            <li>
+                                <a href="{% url 'track_detail' track.id %}">{{ track.title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}

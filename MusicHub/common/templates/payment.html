@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="payment-page">
+    <h1>Оформление подписки</h1>
+    <p>Выбранный тариф: <span>{{ plan }}</span></p>
+    <p>Сумма к оплате: <span>{{ price }}</span></p>
+    <form method="post" action="{% url 'process_payment' %}">
+        {% csrf_token %}
+        <input type="hidden" name="plan" value="{{ plan }}">
+        <label for="card-number">Номер карты:</label>
+        <input type="text" id="card-number" name="card_number" placeholder="0000 0000 0000 0000" required>
+        
+        <label for="expiration-date">Срок действия:</label>
+        <input type="text" id="expiration-date" name="expiration_date" placeholder="MM/YY" required>
+        
+        <label for="cvc">CVC:</label>
+        <input type="text" id="cvc" name="cvc" placeholder="123" required>
+        
+        <label for="cardholder-name">Имя держателя карты:</label>
+        <input type="text" id="cardholder-name" name="cardholder_name" placeholder="Ваше имя" required>
+        
+        <button type="submit" class="button primary">Оплатить</button>
+    </form>
+    {% endblock %}

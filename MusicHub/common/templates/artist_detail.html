@@ -1,45 +1,80 @@
+{% extends "layout.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <title>{{ artist.name }}</title>
-</head>
-<body>
-    <header>
-        <div class="logo-container">
-            <img src="{% static 'img/logo.jfif' %}" alt="Logo" class="logo">
-        </div>
-        <nav>
-            <ul>
-                {% include "menu.html" with is_auth=1 %}
-            </ul>
-        </nav>
-    </header>
+
+{% block title %}{{ artist.name }}{% endblock %}
+
+{% block content %}
+<div class="artist-container">
+  <div class="artist-header">
+      <div class="avatar">
+          {% if artist.avatar %}
+              <img src="{{ artist.avatar.url }}" alt="{{ artist.name }}" class="artist-avatar">
+          {% else %}
+              <img src="{% static 'images/default_avatar.png' %}" alt="Аватар отсутствует" class="artist-avatar">
+          {% endif %}
+      </div>
+      <div class="artist-info">
+          <h1 class="yellow-text">{{ artist.name }}</h1>
+          {% if artist.genre %}
+              <p class="yellow-text"><strong>Жанр:</strong> {{ artist.genre }}</p>
+          {% endif %}
+          <p class="yellow-text">{{ artist.description }}</p>
+      </div>
+  </div>
+
+  <div class="artist-links">
+      <a href="https://dzhizustour2025.ru/" class="button primary">🎟 Купить билеты на концерты</a>
+      <a href="https://t.me/dzhizuss/{{ artist.name|slugify }}" class="button secondary">📢 Telegram-канал {{ artist.name }}</a>
+  </div>
+
+  <h2 class="yellow-text">Альбомы</h2>
+  {% if albums %}
+      <div class="album-grid">
+          {% for album in albums %}
+              <div class="album-card">
+                  <a href="{% url 'album_detail' album.id %}">
+                      {% if album.avatar %}
+                          <img src="{{ album.avatar.url }}" alt="{{ album.title }}" class="album-cover">
+                      {% else %}
+                          <img src="{% static 'images/default_album.png' %}" alt="Обложка отсутствует" class="album-cover">
+                      {% endif %}
+                      <div class="album-info">
+                          <h3 class="yellow-text">{{ album.title }}</h3>
+                          <p class="yellow-text">{{ album.release_date }} - {{ album.genre }}</p>
+                      </div>
+                  </a>
+              </div>
+          {% endfor %}
+      </div>
+  {% else %}
+      <p class="yellow-text">Этот исполнитель пока не выпустил альбомов.</p>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+    const themeSwitch = document.getElementById('theme-switch');
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-theme');
+        themeSwitch.checked = true;
+    } else if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeSwitch.checked = false;
+    }
     
-    <main>
-        <h1>{{ artist.name }}</h1>
-        <p>{{ artist.description }}</p>
-
-        <h2>Альбомы</h2>
-        <ul>
-            {% for album in albums %}
-                <li><a href="{% url 'album_detail' album.id %}">{{ album.title }}</a> - {{ album.release_date }} - {{ album.genre }}</li>
-            {% endfor %}
-        </ul>
-
-        <h2>Треки</h2>
-        <ul>
-            {% for track in tracks %}
-                <li>{{ track.title }} - {{ track.duration }} - {{ track.play_count }}</li>
-            {% endfor %}
-        </ul>
-    </main>
-
-    <footer>
-        <p>© 2025 MusicHub. Все права защищены.</p>
-    </footer>
-</body>
-</html>
+    themeSwitch.addEventListener('change', () => {
+        if (themeSwitch.checked) {
+            document.body.classList.remove('dark-theme');
+            document.body.classList.add('light-theme');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.body.classList.remove('light-theme');
+            document.body.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark');
+        }
+    });
+</script>
+{% endblock %}

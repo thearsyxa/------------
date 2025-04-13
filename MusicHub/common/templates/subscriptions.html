@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %}
+MusicHub Premium Plans
+{% endblock %}
+
+{% block content %}
+<div class="subscription-page">
+    <h1>Выберите тарифный план</h1>
+    <div class="plans"> 
+        <div class="plan">
+            <h2>MusicHub Premium</h2>
+            <p>Цена: 10 BYN/месяц</p>
+            <ul>
+                <li>Без рекламы</li>
+                <li>Высокое качество звука</li>
+                <li>Оффлайн-доступ</li>
+            </ul>
+            <form method="post" action="{% url 'process_payment' %}">
+                {% csrf_token %}
+                <input type="hidden" name="plan" value="MusicHub Premium">
+                <button type="submit" class="button primary">Оформить подписку</button>
+            </form>
+        </div>
+
+        <div class="plan">
+            <h2>MusicHub Premium for Students</h2>
+            <p>Цена: 6.5 BYN/месяц</p>
+            <ul>
+                <li>Проверка статуса студента</li>
+                <li>Все функции Premium</li>
+            </ul>
+            <form method="post" action="{% url 'student_verification' %}">
+                {% csrf_token %}
+                <input type="hidden" name="plan" value="MusicHub Premium for Students">
+                <button type="submit" class="button primary">Оформить как студент</button>
+            </form>
+        </div>
+
+        <div class="plan">
+            <h2>MusicHub Premium Для семьи</h2>
+            <p>Цена: 20 BYN/месяц</p>
+            <ul>
+                <li>Для 4 пользователей</li>
+                <li>Все функции Premium</li>
+            </ul>
+            <form method="post" action="{% url 'process_payment' %}">
+                {% csrf_token %}
+                <input type="hidden" name="plan" value="MusicHub Premium Для семьи">
+                <button type="submit" class="button primary">Подписаться для семьи</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

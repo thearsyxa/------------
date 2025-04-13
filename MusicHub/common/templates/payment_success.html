@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+<div id="success-modal" class="modal">
+    <div class="modal-content">
+        <h1>Поздравляем, вы приобрели {{ plan }}!</h1>
+        <p>Сумма оплаты: {{ price }} BYN</p>
+        <p>Ознакомьтесь с преимуществами подписки.</p>
+        <button class="button primary" onclick="window.location.href='https://t.me/MusicHubDownloade_bot'">
+            Перейти в Telegram-бот
+        </button>
+    </div>
+</div>
+{% endblock %}

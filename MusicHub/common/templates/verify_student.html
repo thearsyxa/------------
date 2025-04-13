@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="subscription-page">
+    <h1>Подтвердите статус студента</h1>
+    <form method="post" enctype="multipart/form-data" action="{% url 'student_verification' %}">
+        {% csrf_token %}
+        <label for="student-id">Загрузите фото студенческого билета:</label>
+        <input type="file" id="student-id" name="student_id" required>
+        <button type="submit" class="button primary">Отправить на проверку</button>
+    </form>
+</div>
+{% endblock %}

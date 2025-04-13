@@ -116,11 +116,9 @@ def get_wikipedia_summary(artist_name):
     response = requests.get(url)
     return response.json().get("extract") if response.status_code == 200 else None
 
-summarizer = pipeline("summarization")
 
 def summarize_text(text):
-    summary = summarizer(text, max_length=50, min_length=25, do_sample=False)
-    return summary[0]['summary_text']
+    return "Суммаризация отключена."
 
 def get_yandex_music_data(track_id, access_token):
     url = f"https://api.music.yandex.net/v1/tracks/{track_id}"

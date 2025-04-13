@@ -2,9 +2,14 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.template import loader
 from django.contrib import messages
-from MusicHub_App.models import Artist, Album, Track
+from MusicHub_App.models import Artist, Album, Track, Playlist, PlaylistTrack
 from .utils import get_artist_info, get_wikipedia_summary, summarize_text, get_yandex_music_data
 from .forms import SearchForm
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from .text_generation import generate_text
+from .wikipedia_search import search_wikipedia
 
 
 def index(request):
@@ -130,19 +135,52 @@ def popular_artists_view(request):
 def explore_music_view(request):
     return render(request, 'explore_music.html')
 
-           
-    
+
+def get_track_lyrics(request, track_id):
+    try:
+        track = Track.objects.get(id=track_id)
+        if track.lyrics:
+            return JsonResponse({'lyrics': track.lyrics})
+        else:
+            return JsonResponse({'error': 'Текст песни отсутствует.'}, status=404)
+    except Track.DoesNotExist:
+        return JsonResponse({'error': 'Трек не найден.'}, status=404)
     
 
+def ai_assistant(request):
+    return HttpResponse("Hello, this is the AI Assistant page!")
+
+    
+@login_required
+def add_to_playlist(request, track_id):
+    track = get_object_or_404(Track, id=track_id)
+    playlist, _ = Playlist.objects.get_or_create(user=request.user)
+    PlaylistTrack.objects.create(playlist=playlist, track=track)
+    existing_track = PlaylistTrack.objects.filter(playlist=playlist,track=track).exists()
+    if not existing_track:
+        PlaylistTrack.objects.create(playlist=playlist, track=track)
+        messages.success(request, f"Трек '{track.title}' добавлен в плейлист!")
+    else:
+        messages.info(request, f"Трек '{track.title}' уже есть в вашем плейлисте.")
+    return redirect('playlist_detail')
 
 
+@login_required
+def playlist_detail(request):
+    playlist = Playlist.objects.filter(user=request.user).first()
+    return render(request, 'playlist_detail.html', {'playlist':playlist})
 
 
-    
-    
-    
-    
-    
-    
-    
-    
+@login_required
+def remove_from_playlist(request, track_id):
+    playlist = Playlist.objects.filter(user=request.user).first()
+    if not playlist:
+        return JsonResponse({'success': False, 'message': 'Плейлист не найден'})
+
+    track = PlaylistTrack.objects.filter(playlist=playlist, track_id=track_id).first()
+    if track:
+        track.delete()
+        return JsonResponse({'success': True, 'message': 'Трек успешно удален'})
+    return JsonResponse({'success': False, 'message': 'Трек не найден'})
+
+

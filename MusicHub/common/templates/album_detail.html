@@ -1,46 +1,65 @@
+{% extends "layout.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <title>{{ album.title }}</title>
-</head>
-<body>
-    <header>
-        <div class="logo-container">
-            <img src="{% static 'img/logo.jfif' %}" alt="Logo" class="logo">
+
+{% block title %}{{ album.title }}{% endblock %}
+
+{% block content %}
+<div class="album-container">
+  <div class="avatar">
+    {% if album.avatar %}
+      <img src="{{ album.avatar.url }}" alt="Обложка альбома {{ album.title }}" class="avatar-image">
+    {% else %}
+      <img src="{% static 'images/default_avatar.png' %}" alt="Обложка отсутствует" class="avatar-image">
+    {% endif %}
+  </div>
+  <div class="details">
+    <h1>{{ album.title }}</h1>
+    <p><strong>Дата выпуска:</strong> {{ album.release_date }}</p>
+    <p><strong>Жанр:</strong> {{ album.genre }}</p>
+    <p><strong>Описание:</strong> {{ album.description }}</p>
+  </div>
+</div>
+
+<h2>Треки</h2>
+<ul>
+  {% for track in tracks %}
+    <li>
+      <div class="track-container">
+        <div class="details">
+          {{ track.title }} – {{ track.duration }} – {{ track.play_count }}
+          <audio controls>
+            <source src="{{ track.audio_file.url }}" type="audio/mpeg">
+            Ваш браузер не поддерживает элемент audio.
+          </audio>
+          <a href="{% url 'track_detail' track.id %}">Подробнее</a>
         </div>
-        <nav>
-            <ul>
-                {% include "menu.html" with is_auth=1 %}
-            </ul>
-        </nav>
-    </header>
-    
-    <main>
-        <h1>{{ album.title }}</h1>
-        <p>Release date: {{ album.release_date }}</p>
-        <p>Genre: {{ album.genre }}</p>
+      </div>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
 
-        <h2>Треки</h2>
-        <ul>
-            {% for track in tracks %}
-                <li>
-                    {{ track.title }} - {{ track.duration }} - {{ track.play_count }}
-                    <audio controls>
-                        <source src="{{ track.audio_file.url }}" type="audio/mpeg">
-                        Ваш браузер не поддерживает элемент audio.
-                    </audio>
-                    <a href="{% url 'track_detail' track.id %}">Подробнее</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </main>
-
-    <footer>
-        <p>© 2025 MusicHub. Все права защищены.</p>
-    </footer>
-</body>
-</html>
+{% block extra_js %}
+<script>
+  const themeSwitch = document.getElementById('theme-switch');
+  if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light-theme');
+      themeSwitch.checked = true;
+  } else if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-theme');
+      themeSwitch.checked = false;
+  }
+  
+  themeSwitch.addEventListener('change', () => {
+      if (themeSwitch.checked) {
+          document.body.classList.remove('dark-theme');
+          document.body.classList.add('light-theme');
+          localStorage.setItem('theme', 'light');
+      } else {
+          document.body.classList.remove('light-theme');
+          document.body.classList.add('dark-theme');
+          localStorage.setItem('theme', 'dark');
+      }
+  });
+</script>
+{% endblock %}
